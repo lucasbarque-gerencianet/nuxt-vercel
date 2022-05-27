@@ -59,12 +59,6 @@ export default async () => {
         },
       },
     },
-    serverMiddleware: [
-      {
-        path: '/api/marketing',
-        handler: '~/server-middleware/MSMarketingService.ts',
-      },
-    ],
     srcDir: 'src/',
     env: config.environments,
     server: config.server,

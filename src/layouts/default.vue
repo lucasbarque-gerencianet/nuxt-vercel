@@ -1,6 +1,5 @@
 <template>
   <div>
-    <HeaderGerencianet />
     <Nuxt />
   </div>
 </template>

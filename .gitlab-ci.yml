@@ -1,0 +1,82 @@
+image: node:14-alpine
+
+variables:
+  GN_GITLAB_TESTING_URL: 'gitlab.interno.testegerencianet.com.br'
+  REPO: 'git@gitlab.interno.testegerencianet.com.br:marketing/portal-frontend.git'
+
+.shared_before_script: &shared
+  before_script:
+    - mkdir -p /usr/local/share/ca-certificates
+    - cp docker/Gerencianet-CA.crt /usr/local/share/ca-certificates/Gerencianet-CA.crt
+    - apk add ca-certificates git curl openssh make build-base python yarn
+    - update-ca-certificates
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - yarn
+  cache:
+    key: no_cache
+    paths:
+      - node_modules/
+
+.deploy: &deploy
+  before_script:
+    - apk --update add curl
+  script:
+    - curl --insecure -k -X POST -F token=$DEPLOY_TOKEN -F ref=master -F variables[GN_VERSAO_APP]=$CI_COMMIT_TAG $DEPLOY_URL
+  only:
+    - tags
+  when: manual
+  resource_group: deploy
+  allow_failure: false
+
+stages:
+  - analysis
+  - audit
+  - tags
+  - testing
+  - production
+
+lint:
+  stage: analysis
+  <<: *shared
+  script:
+    - npm run lint
+  only:
+    - branches
+  except:
+    - master
+
+audit:
+  stage: audit
+  <<: *shared
+  script:
+    - yarn audit --production
+  rules:
+    - if: '$ALLOW_FAILURE == "true" && $CI_COMMIT_REF_NAME !~ "master" && $CI_COMMIT_MESSAGE !~ /Release [0-9]+\.[0-9]+\.[0-9]+/ && $CI_PIPELINE_SOURCE !~ "merge_request_event"'
+      allow_failure: true
+    - if: '$ALLOW_FAILURE == "false" && $CI_COMMIT_REF_NAME !~ "master" && $CI_COMMIT_MESSAGE !~ /Release [0-9]+\.[0-9]+\.[0-9]+/ && $CI_PIPELINE_SOURCE !~ "merge_request_event"'
+      allow_failure: false
+
+tag:
+  stage: tags
+  <<: *shared
+  script:
+    - npm run release
+  resource_group: tag
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master" && $CI_COMMIT_TAG == null && $CI_COMMIT_MESSAGE !~ /Release [0-9]+\.[0-9]+\.[0-9]+/'
+      when: always
+    - when: never
+  allow_failure: true
+
+deploy-testing:
+  stage: testing
+  <<: *deploy
+  environment:
+    name: testing
+
+deploy-production:
+  stage: production
+  <<: *deploy
+  environment:
+    name: production

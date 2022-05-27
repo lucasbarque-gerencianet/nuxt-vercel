@@ -1,0 +1,14 @@
+{
+  "project": "portal-frontend",
+  "log": {
+    "apm": {
+      "server": "http//localhost:8200"
+    }
+  },
+  "environments": {
+    "endpoints": {
+      "msMarketing": "https://ms-marketing.m{{DEVELOPER_REGISTRATION}}.orp-1.colaboradores.labgerencianet.com.br",
+      "gerencianet": "https://gerencianet.com.br"
+    }
+  }
+}

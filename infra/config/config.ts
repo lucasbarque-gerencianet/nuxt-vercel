@@ -36,7 +36,13 @@ const getParameters = async (): Promise<{ [key: string]: string }> => {
     };
   }
 
-  const ssm = new AWS.SSM({ apiVersion: '2014-11-06' });
+  // const ssm = new AWS.SSM({ apiVersion: '2014-11-06' });
+  const ssm = new AWS.SSM({ apiVersion: '2014-11-06',
+                            region: 'us-east-1',
+                            endpoint: 'http://localstack:4566',
+                            accessKeyId: 'teste',
+                            secretAccessKey: 'teste'
+  });
 
   const options = {
     Names: [PARAMETER_CONFIG, PARAMETER_TIMEZONE],

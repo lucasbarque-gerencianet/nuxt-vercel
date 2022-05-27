@@ -1,14 +1,8 @@
 import { resolve } from 'path';
-import APM from './infra/tools/apm';
 import { getConfig } from './infra/config/config.ts';
 
 export default async () => {
   const config = await getConfig();
-
-  if (process.env.NODE_ENV !== 'development') {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const apm = new APM(config);
-  }
 
   return {
     target: 'static',

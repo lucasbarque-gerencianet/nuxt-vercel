@@ -5,7 +5,7 @@ export default async () => {
   const config = await getConfig();
 
   return {
-    target: 'static',
+    target: 'server',
     head: {
       title: 'novo-portal-dev',
       htmlAttrs: {

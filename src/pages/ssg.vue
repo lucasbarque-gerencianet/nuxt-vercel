@@ -17,6 +17,7 @@ export default {
       'https://gerencianet.com.br/wp-json/wp/v2/users/45'
     ).then((res) => res.json());
   },
+
   activated() {
     console.log('activated');
     // Call fetch again if last fetch more than 30 sec ago

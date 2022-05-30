@@ -68,7 +68,7 @@ export default async () => {
       ]
     },
     serverMiddleware: [
-      { path: "/server-middleware", handler: "~/server-middleware/rest.js" },
+      { path: "/api/test", handler: "~/server-middleware/rest.js" },
     ]
   };
 };

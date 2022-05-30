@@ -1,10 +1,12 @@
-const bodyParser = require('body-parser');
-const app = require('express')();
+import express from 'express';
 
-app.use(bodyParser.json());
-app.all('/getJSON', (req, res) => {
-  console.log(req);
-  return res.send(201).json({ data: 'data' });
+const app = express();
+app.use(express.json());
+
+app.get('/bla', (request, response) => {
+  console.log(request);
+  return response.status(201).json({ bla: 'teste' });
+
 });
 
-module.exports = app;
+export default app;

@@ -66,6 +66,9 @@ export default async () => {
       exclude: [
         /^\/spa/
       ]
-    }
+    },
+    serverMiddleware: [
+      { path: "/server-middleware", handler: "~/server-middleware/rest.js" },
+    ]
   };
 };

@@ -62,5 +62,10 @@ export default async () => {
     srcDir: 'src/',
     env: config.environments,
     server: config.server,
+    generate: {
+      exclude: [
+        /^\/spa/
+      ]
+    }
   };
 };
